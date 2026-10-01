@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -34,12 +33,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import kotlinx.coroutines.launch
 
-private val OrynBg = Color(0xFF050506)
-private val OrynText = Color(0xFFF8F3FA)
-private val OrynMuted = Color(0xFF96919D)
-private val OrynSurface = Color(0xFF111015)
-private val OrynSurface2 = Color(0xFF17151C)
-private val OrynAccent = Color(0xFFD7B6FF)
+val OrynBg = Color(0xFF050506)
+val OrynText = Color(0xFFF8F3FA)
+val OrynMuted = Color(0xFF96919D)
+val OrynSurface = Color(0xFF111015)
+val OrynSurface2 = Color(0xFF17151C)
+val OrynAccent = Color(0xFFD7B6FF)
 
 @Composable
 fun OrynApp() {
