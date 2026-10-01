@@ -238,7 +238,7 @@ private fun TrackRow(
 }
 
 @Composable
-private fun ArtworkTile(seed: Long) {
+fun ArtworkTile(seed: Long) {
     val gradients = listOf(
         listOf(Color(0xFFB77CFF), Color(0xFF2A1839)),
         listOf(Color(0xFF7CB7FF), Color(0xFF152A44)),
