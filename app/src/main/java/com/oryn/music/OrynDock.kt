@@ -52,7 +52,8 @@ fun OrynBottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp, bottom = 10.dp)
+            .padding(horizontal = 18.dp)
+            .padding(bottom = 10.dp)
             .windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.navigationBars),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
