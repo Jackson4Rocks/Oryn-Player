@@ -58,7 +58,8 @@ fun MiniPlayer(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp, bottom = 92.dp)
+            .padding(horizontal = 18.dp)
+            .padding(bottom = 92.dp)
             .height(70.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(Color(0xF21A181E))
