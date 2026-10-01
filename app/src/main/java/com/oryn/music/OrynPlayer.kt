@@ -64,6 +64,15 @@ class OrynPlayer(private val context: Context) {
         }
     }
 
+    fun seekTo(positionMs: Long) {
+        mediaPlayer?.let { player ->
+            runCatching { player.seekTo(positionMs.coerceIn(0L, player.duration.toLong()).toInt()) }
+        }
+    }
+
+    fun currentPositionMs(): Long =
+        mediaPlayer?.let { runCatching { it.currentPosition.toLong() }.getOrDefault(0L) } ?: 0L
+
     fun release() {
         releasePlayer()
     }
