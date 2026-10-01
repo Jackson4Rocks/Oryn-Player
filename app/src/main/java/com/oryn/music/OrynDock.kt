@@ -64,7 +64,8 @@ fun OrynBottomBar(
                 .weight(1f, fill = false)
                 .background(OrynSurface2, RoundedCornerShape(32.dp))
                 .border(1.dp, Color.White.copy(.08f), RoundedCornerShape(32.dp))
-                .padding(horizontal = 5.dp, vertical = 5.dp),
+                .padding(horizontal = 5.dp)
+                .padding(vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEachIndexed { index, item ->
