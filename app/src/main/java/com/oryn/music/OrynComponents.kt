@@ -50,6 +50,7 @@ import coil3.compose.AsyncImage
 fun MiniPlayer(
     track: Track,
     playing: Boolean,
+    onOpen: () -> Unit,
     onPlayPause: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
@@ -61,6 +62,7 @@ fun MiniPlayer(
             .padding(horizontal = 18.dp)
             .padding(bottom = 92.dp)
             .height(70.dp)
+            .clickable(onClick = onOpen)
             .clip(RoundedCornerShape(24.dp))
             .background(Color(0xF21A181E))
             .border(1.dp, Color.White.copy(.11f), RoundedCornerShape(24.dp))
