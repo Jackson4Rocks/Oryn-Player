@@ -247,7 +247,7 @@ fun PlaylistCard(title: String, subtitle: String, icon: ImageVector, accent: Col
     }
 }
 
-private fun formatDuration(durationMs: Long): String {
+fun formatDuration(durationMs: Long): String {
     val totalSeconds = durationMs / 1000
     return "%d:%02d".format(totalSeconds / 60, totalSeconds % 60)
 }
