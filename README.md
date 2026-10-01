@@ -31,3 +31,5 @@ The project targets Android 26+ and uses Jetpack Compose with Material 3.
 8. Audio focus and headset controls
 9. Android Auto support
 10. More liquid-motion polish throughout the player
+
+> CI builds are enabled on pushes to `main`.
