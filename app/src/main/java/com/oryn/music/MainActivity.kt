@@ -43,6 +43,13 @@ private fun mediaPermission(): String =
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
+private fun notificationGranted(context: android.content.Context): Boolean =
+    Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+
 @Composable
 private fun OrynPermissionRoot() {
     val context = LocalContext.current
@@ -53,14 +60,31 @@ private fun OrynPermissionRoot() {
                 PackageManager.PERMISSION_GRANTED
         )
     }
+    var notificationsGranted by remember {
+        mutableStateOf(notificationGranted(context))
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted = it }
 
+    val notificationLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { notificationsGranted = it }
+
     LaunchedEffect(permission) {
         if (!granted) {
             permissionLauncher.launch(permission)
+        }
+    }
+
+    LaunchedEffect(granted) {
+        if (
+            granted &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !notificationsGranted
+        ) {
+            notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
