@@ -62,7 +62,9 @@ class OrynPlayer(context: Context) {
                                 mediaItem: MediaItem?,
                                 reason: Int
                             ) {
-                                currentTrackId = mediaItem?.mediaId?.toLongOrNull()
+                                if (isPlaying || currentTrackId != null) {
+                                    currentTrackId = mediaItem?.mediaId?.toLongOrNull()
+                                }
                             }
 
                             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
@@ -77,7 +79,9 @@ class OrynPlayer(context: Context) {
                         shuffleEnabled = connected.shuffleModeEnabled
                         repeatMode = connected.repeatMode
                         isPlaying = connected.isPlaying
-                        currentTrackId = connected.currentMediaItem?.mediaId?.toLongOrNull()
+                        if (connected.isPlaying) {
+                            currentTrackId = connected.currentMediaItem?.mediaId?.toLongOrNull()
+                        }
 
                         if (queuedTracks.isNotEmpty()) {
                             applyQueue(queuedTracks, connected)
@@ -162,6 +166,7 @@ class OrynPlayer(context: Context) {
         val index = queuedTracks.indexOfFirst { it.id == track.id }
 
         if (index >= 0 && connected.mediaItemCount == queuedTracks.size) {
+            currentTrackId = track.id
             connected.seekTo(index, 0L)
             connected.play()
         } else {
@@ -176,6 +181,7 @@ class OrynPlayer(context: Context) {
                         .build()
                 )
                 .build()
+            currentTrackId = track.id
             connected.setMediaItem(item)
             connected.prepare()
             connected.play()
