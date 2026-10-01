@@ -74,6 +74,7 @@ fun OrynApp() {
     }
 
     LaunchedEffect(Unit) { refresh() }
+    LaunchedEffect(tracks) { player.setQueue(tracks) }
 
     fun toggleFavorite(id: Long) {
         val next = if (id in favorites) favorites - id else favorites + id
@@ -204,6 +205,8 @@ fun OrynApp() {
                 track = currentTrack,
                 playing = player.isPlaying,
                 favorite = currentTrack.id in favorites,
+                shuffleEnabled = player.shuffleEnabled,
+                repeatMode = player.repeatMode,
                 onBack = { nowPlayingOpen = false },
                 onPlayPause = { player.toggle(currentTrack) },
                 onPrevious = {
@@ -215,6 +218,10 @@ fun OrynApp() {
                     if (index >= 0 && index + 1 < tracks.size) player.play(tracks[index + 1])
                 },
                 onFavorite = { toggleFavorite(currentTrack.id) },
+                onShuffle = player::toggleShuffle,
+                onRepeat = player::cycleRepeat,
+                onSeekBack = { player.seekBy(-10_000L) },
+                onSeekForward = { player.seekBy(10_000L) },
                 player = player
             )
         }
