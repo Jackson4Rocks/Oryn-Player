@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -65,9 +64,6 @@ fun OrynHeader(
             Column(Modifier.weight(1f)) {
                 Text("ORYN", color = OrynText, fontSize = 22.sp, fontWeight = FontWeight.Bold, letterSpacing = 4.sp)
                 Text("LOCAL • PRIVATE • YOUR MUSIC", color = OrynMuted, fontSize = 8.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.35.sp)
-            }
-            IconButton(onClick = onSearchToggle) {
-                Icon(Icons.Outlined.Search, "Search", tint = OrynText)
             }
             IconButton(onClick = onAbout) {
                 Icon(Icons.Outlined.Person, "About", tint = OrynAccent)
