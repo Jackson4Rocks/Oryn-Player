@@ -1,1 +1,1 @@
-# oryn-player
+# Oryn Player
