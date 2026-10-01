@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.oryn.music"
-        minSdk = 26
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
@@ -40,7 +40,8 @@ android {
 }
 
 dependencies {
-    val composeBom = platform("androidx.compose:compose-bom:2026.08.00")
+    // Stable Compose 1.11.x line; compatible with compileSdk 36.
+    val composeBom = platform("androidx.compose:compose-bom:2026.06.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
