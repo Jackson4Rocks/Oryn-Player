@@ -37,6 +37,8 @@ import kotlinx.coroutines.launch
 private val OrynBg = Color(0xFF050506)
 private val OrynText = Color(0xFFF8F3FA)
 private val OrynMuted = Color(0xFF96919D)
+private val OrynSurface = Color(0xFF111015)
+private val OrynSurface2 = Color(0xFF17151C)
 private val OrynAccent = Color(0xFFD7B6FF)
 
 @Composable
