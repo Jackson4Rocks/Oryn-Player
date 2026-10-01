@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ fun OrynApp() {
     val scope = rememberCoroutineScope()
     var page by rememberSaveable { mutableIntStateOf(0) }
     var aboutOpen by rememberSaveable { mutableStateOf(false) }
+    var nowPlayingOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
     var tracks by remember { mutableStateOf<List<Track>>(emptyList()) }
@@ -77,6 +79,12 @@ fun OrynApp() {
         val next = if (id in favorites) favorites - id else favorites + id
         favorites = next
         preferences.edit { putStringSet("favorites", next.map(Long::toString).toSet()) }
+    }
+
+    val currentTrack = player.currentTrackId?.let { id -> tracks.firstOrNull { it.id == id } }
+
+    BackHandler(enabled = nowPlayingOpen) {
+        nowPlayingOpen = false
     }
 
     val filtered = remember(tracks, query) {
@@ -149,32 +157,58 @@ fun OrynApp() {
             }
         }
 
-        val current = player.currentTrackId?.let { id -> tracks.firstOrNull { it.id == id } }
-        if (current != null) {
+        if (!nowPlayingOpen && currentTrack != null) {
             MiniPlayer(
-                track = current,
+                track = currentTrack,
                 playing = player.isPlaying,
-                onPlayPause = { player.toggle(current) },
+                onOpen = { nowPlayingOpen = true },
+                onPlayPause = { player.toggle(currentTrack) },
                 onPrevious = {
-                    val index = tracks.indexOfFirst { it.id == current.id }
+                    val index = tracks.indexOfFirst { it.id == currentTrack.id }
                     if (index > 0) player.play(tracks[index - 1])
                 },
                 onNext = {
-                    val index = tracks.indexOfFirst { it.id == current.id }
+                    val index = tracks.indexOfFirst { it.id == currentTrack.id }
                     if (index >= 0 && index + 1 < tracks.size) player.play(tracks[index + 1])
                 },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
 
-        LiquidGlassDock(
-            selectedIndex = page,
-            onSelected = { page = it },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
+        if (!nowPlayingOpen) {
+            OrynBottomBar(
+                selectedIndex = page,
+                onSelected = { page = it },
+                onSearch = {
+                    searchOpen = true
+                    query = ""
+                },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
 
         if (aboutOpen) {
             AboutOverlay(onDismiss = { aboutOpen = false }, context = context)
+        }
+
+        if (nowPlayingOpen && currentTrack != null) {
+            NowPlayingPage(
+                track = currentTrack,
+                playing = player.isPlaying,
+                favorite = currentTrack.id in favorites,
+                onBack = { nowPlayingOpen = false },
+                onPlayPause = { player.toggle(currentTrack) },
+                onPrevious = {
+                    val index = tracks.indexOfFirst { it.id == currentTrack.id }
+                    if (index > 0) player.play(tracks[index - 1])
+                },
+                onNext = {
+                    val index = tracks.indexOfFirst { it.id == currentTrack.id }
+                    if (index >= 0 && index + 1 < tracks.size) player.play(tracks[index + 1])
+                },
+                onFavorite = { toggleFavorite(currentTrack.id) },
+                player = player
+            )
         }
     }
 }
