@@ -132,7 +132,7 @@ class OrynPlayer(context: Context) {
             items.indexOfFirst { it.mediaId == id }.takeIf { it >= 0 }
         } ?: 0
 
-        val targetPosition = if (currentId != null && targetIndex != 0 || currentId == items[targetIndex].mediaId.toLongOrNull()) {
+        val targetPosition = if (currentId != null) {
             currentPosition.coerceAtLeast(0L)
         } else {
             0L
