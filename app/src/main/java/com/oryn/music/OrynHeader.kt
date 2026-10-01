@@ -13,7 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -32,7 +32,7 @@ fun OrynHeader(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearchToggle: () -> Unit,
-    onAbout: () -> Unit
+    onSettings: () -> Unit
 ) {
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp),
@@ -65,8 +65,8 @@ fun OrynHeader(
                 Text("ORYN", color = OrynText, fontSize = 22.sp, fontWeight = FontWeight.Bold, letterSpacing = 4.sp)
                 Text("LOCAL • PRIVATE • YOUR MUSIC", color = OrynMuted, fontSize = 8.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.35.sp)
             }
-            IconButton(onClick = onAbout) {
-                Icon(Icons.Outlined.Person, "About", tint = OrynAccent)
+            IconButton(onClick = onSettings) {
+                Icon(Icons.Outlined.Settings, "Settings", tint = OrynAccent)
             }
         }
     }
