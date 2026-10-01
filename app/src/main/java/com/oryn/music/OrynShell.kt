@@ -46,7 +46,7 @@ fun OrynApp() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var page by rememberSaveable { mutableIntStateOf(0) }
-    var aboutOpen by rememberSaveable { mutableStateOf(false) }
+    var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var nowPlayingOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
@@ -83,7 +83,11 @@ fun OrynApp() {
 
     val currentTrack = player.currentTrackId?.let { id -> tracks.firstOrNull { it.id == id } }
 
-    BackHandler(enabled = nowPlayingOpen) {
+    BackHandler(enabled = settingsOpen) {
+        settingsOpen = false
+    }
+
+    BackHandler(enabled = nowPlayingOpen && !settingsOpen) {
         nowPlayingOpen = false
     }
 
@@ -113,7 +117,7 @@ fun OrynApp() {
                     searchOpen = !searchOpen
                     if (!searchOpen) query = ""
                 },
-                onAbout = { aboutOpen = true }
+                onSettings = { settingsOpen = true }
             )
 
             AnimatedContent(
@@ -187,8 +191,12 @@ fun OrynApp() {
             )
         }
 
-        if (aboutOpen) {
-            AboutOverlay(onDismiss = { aboutOpen = false }, context = context)
+        if (settingsOpen) {
+            SettingsScreen(
+                onBack = { settingsOpen = false },
+                onRescan = ::refresh,
+                context = context
+            )
         }
 
         if (nowPlayingOpen && currentTrack != null) {
