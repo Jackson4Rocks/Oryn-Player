@@ -456,121 +456,174 @@ private fun LiquidGlassNavBar(
     onSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val itemWidth = 96.dp
-    val capsuleOffset by animateDpAsState(
-        targetValue = itemWidth * selectedIndex + 7.dp,
+    val slotWidth = 92.dp
+    val lensWidth = 112.dp
+    val lensOffset by animateDpAsState(
+        targetValue = selectedIndex * slotWidth - 10.dp,
         animationSpec = spring(
-            dampingRatio = .82f,
-            stiffness = Spring.StiffnessLow
+            dampingRatio = .78f,
+            stiffness = Spring.StiffnessMediumLow
         ),
-        label = "glass-capsule-offset"
+        label = "glass-lens-offset"
     )
 
     Box(
         modifier = modifier
-            .fillMaxWidth()
-            .height(76.dp)
-            .clip(RoundedCornerShape(30.dp))
+            .width(292.dp)
+            .height(72.dp)
+            .clip(RoundedCornerShape(38.dp))
             .background(
                 Brush.linearGradient(
-                    listOf(Color(0xF01D1B21), Color(0xE8151419), Color(0xE91A181E))
+                    listOf(
+                        Color(0xDA29282E),
+                        Color(0xD51B1A20),
+                        Color(0xD8242329)
+                    )
                 )
             )
             .border(
                 1.dp,
-                Brush.linearGradient(
-                    listOf(Color.White.copy(.13f), Color.White.copy(.035f))
-                ),
-                RoundedCornerShape(30.dp)
+                Color.White.copy(alpha = .12f),
+                RoundedCornerShape(38.dp)
             )
-            .padding(7.dp)
+            .padding(4.dp)
     ) {
+        // Fixed glass shell.
         Box(
             Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .align(Alignment.TopCenter)
+                .fillMaxSize()
+                .clip(RoundedCornerShape(34.dp))
                 .background(
-                    Brush.horizontalGradient(
+                    Brush.radialGradient(
                         listOf(
-                            Color.Transparent,
-                            Color.White.copy(.17f),
+                            Color.White.copy(alpha = .075f),
                             Color.Transparent
                         )
                     )
                 )
         )
 
+        // The moving glass lens is intentionally wider than one slot,
+        // matching the overlapping, liquid-dock behavior in the reference.
         Box(
             modifier = Modifier
-                .width(itemWidth)
-                .height(62.dp)
-                .offset(x = capsuleOffset)
-                .clip(RoundedCornerShape(24.dp))
+                .width(lensWidth)
+                .height(64.dp)
+                .offset(x = lensOffset)
+                .clip(RoundedCornerShape(34.dp))
                 .background(
                     Brush.linearGradient(
                         listOf(
-                            Color(0x26FFFFFF),
-                            Color(0x14FFFFFF),
-                            Color(0x22DAB5FF)
+                            Color(0x45FFFFFF),
+                            Color(0x22FFFFFF),
+                            Accent.copy(alpha = .08f)
                         )
                     )
                 )
                 .border(
-                    1.dp,
-                    Color.White.copy(alpha = .075f),
-                    RoundedCornerShape(24.dp)
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = .48f),
+                            Color.White.copy(alpha = .12f),
+                            Accent.copy(alpha = .20f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(34.dp)
                 )
         ) {
-            Box(
-                Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth(.56f)
-                    .height(5.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Accent.copy(alpha = .15f))
-            )
+            // Soft liquid highlight.
+            Canvas(Modifier.fillMaxSize()) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        listOf(
+                            Color.White.copy(alpha = .18f),
+                            Color.Transparent
+                        )
+                    ),
+                    radius = size.minDimension * .58f,
+                    center = androidx.compose.ui.geometry.Offset(
+                        size.width * .20f,
+                        size.height * .08f
+                    )
+                )
+
+                // Subtle chromatic edge accents to mimic refraction.
+                drawRoundRect(
+                    brush = Brush.sweepGradient(
+                        listOf(
+                            Color.Transparent,
+                            Color(0x55A8C7FF),
+                            Color.Transparent,
+                            Color(0x44D8A8FF),
+                            Color.Transparent
+                        )
+                    ),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.3.dp.toPx()),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(
+                        34.dp.toPx(),
+                        34.dp.toPx()
+                    )
+                )
+            }
         }
 
-        Row(Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             navItems.forEachIndexed { index, item ->
                 val active = index == selectedIndex
                 val iconTint by animateColorAsState(
-                    targetValue = if (active) TextPrimary else TextMuted,
-                    animationSpec = tween(220, easing = FastOutSlowInEasing),
-                    label = "icon-tint"
+                    targetValue = if (active) Accent else TextPrimary.copy(alpha = .82f),
+                    animationSpec = tween(180, easing = FastOutSlowInEasing),
+                    label = "dock-icon-tint"
                 )
-                val labelAlpha by androidx.compose.animation.core.animateFloatAsState(
-                    targetValue = if (active) 1f else .72f,
-                    animationSpec = tween(220),
-                    label = "label-alpha"
+                val scale by androidx.compose.animation.core.animateFloatAsState(
+                    targetValue = if (active) 1.03f else 1f,
+                    animationSpec = spring(
+                        dampingRatio = .82f,
+                        stiffness = Spring.StiffnessMedium
+                    ),
+                    label = "dock-item-scale"
                 )
 
                 Box(
                     modifier = Modifier
-                        .weight(1f)
+                        .width(slotWidth)
                         .fillMaxSize()
                         .pointerInput(index) {
-                            detectTapGestures { onSelected(index) }
+                            detectTapGestures {
+                                onSelected(index)
+                            }
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
                     ) {
                         Icon(
                             item.icon,
                             contentDescription = item.label,
                             tint = iconTint,
-                            modifier = Modifier.size(if (active) 22.dp else 20.dp)
+                            modifier = Modifier
+                                .size(if (active) 22.dp else 20.dp)
+                                .then(
+                                    Modifier.graphicsLayer {
+                                        scaleX = scale
+                                        scaleY = scale
+                                    }
+                                )
                         )
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(3.dp))
                         Text(
-                            item.label,
-                            color = TextPrimary.copy(alpha = labelAlpha),
-                            fontSize = 10.sp,
-                            fontWeight = if (active) FontWeight.SemiBold else FontWeight.Normal
+                            text = item.label,
+                            color = if (active) Accent else TextPrimary.copy(alpha = .86f),
+                            fontSize = 11.sp,
+                            fontWeight = if (active) FontWeight.Medium else FontWeight.Normal,
+                            maxLines = 1
                         )
                     }
                 }
