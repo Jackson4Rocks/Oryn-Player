@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -208,7 +209,7 @@ private fun BoxIcon(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     tint: Color
 ) {
-    androidx.compose.foundation.layout.Box(
+    Box(
         Modifier.size(50.dp).clip(RoundedCornerShape(17.dp)).background(tint.copy(.10f)),
         contentAlignment = Alignment.Center
     ) {
